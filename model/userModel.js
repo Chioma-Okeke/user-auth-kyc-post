@@ -2,23 +2,23 @@ const mongoose = require("mongoose");
 
 const userModel = new mongoose.Schema(
     {
-        userName: {
+        username: {
             type: String,
-            require: true,
+            required: true,
             unique: true,
         },
         email: {
             type: String,
-            require: true,
+            required: true,
             unique: true,
         },
         password: {
             type: String,
-            require: true,
+            required: true,
         },
-        kyc: {
+        kycId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: kyc,
+            ref: "kyc",
         },
         postIds: [
             {

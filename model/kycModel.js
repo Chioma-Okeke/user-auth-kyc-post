@@ -18,4 +18,4 @@ const kycModel = new mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model("user", kycModel);
+module.exports = mongoose.model("kyc", kycModel);
