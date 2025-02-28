@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 
 const register = async (req, res, next) => {
     const { username, email, password } = req.body;
-    console.log(req.body, "here is req")
+    console.log(req.body, "here is req");
     if (!username || !email || !password) {
         return res.status(400).json({ msg: "All fields are required" });
     }
@@ -19,7 +19,7 @@ const register = async (req, res, next) => {
     try {
         const user = await userModel.findOne({ email });
         if (user) {
-           return res.status(400).json({ msg: "User already exists" });
+            return res.status(400).json({ msg: "User already exists" });
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -28,14 +28,14 @@ const register = async (req, res, next) => {
         const newUser = new userModel({
             ...req.body,
             password: hashedPassword,
-            kycId: null
+            kycId: null,
         });
-        console.log(newUser, "new here")
+        console.log(newUser, "new here");
         const savedUser = await newUser.save();
         const { password: _, ...userData } = savedUser.toObject();
         res.status(200).json(userData);
     } catch (error) {
-        console.error(error)
+        console.error(error);
         next({ status: 500, message: "Something went wrong" });
     }
 };
@@ -53,9 +53,9 @@ const login = async (req, res, next) => {
 
         const comparePassword = await bcrypt.compare(password, user.password);
         if (!comparePassword) {
-            return (
-                res.status(400).json({ msg: "email address or password incorrect" })
-            );
+            return res
+                .status(400)
+                .json({ msg: "email address or password incorrect" });
         }
 
         const { password: _, ...userData } = user.toObject();
@@ -94,14 +94,13 @@ const delete_a_user = async (req, res, next) => {
     }
 
     try {
-        const user = await userModel.findById(id)
-        if (!user) return res.status(404).json({message: "User does not exist."});
+        const user = await userModel.findById(id);
 
         //delete KYC record
         if (user.kycId) await kycModel.findByIdAndDelete(user.kycId);
 
         //delete any post associated with user
-        await postModel.deleteMany({userId: user._id})
+        await postModel.deleteMany({ userId: user._id });
 
         //log user out
         res.cookie("token", "", {
@@ -113,7 +112,9 @@ const delete_a_user = async (req, res, next) => {
 
         //delete user
         await userModel.findByIdAndDelete(id);
-        res.status(200).json({ msg: "User and all user record successfully deleted" });
+        res.status(200).json({
+            msg: "User and all user record successfully deleted",
+        });
     } catch (error) {
         next(error);
     }

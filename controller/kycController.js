@@ -10,13 +10,13 @@ const create_user_kyc = async (req, res, next) => {
             message: "Please a value is required. KYC information missing.",
         });
     }
-    
+
     try {
         const user = await userModel.findById(userInfo);
         if (!user) {
             return res
                 .status(401)
-                .json({ msg: "You need to be logged in to create a kyc" });
+                .json({ msg: "You need to be logged in to create a KYC" });
         }
 
         const kyc = new kycModel({ ...req.body, userId: user._id });

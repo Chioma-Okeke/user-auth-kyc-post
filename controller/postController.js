@@ -6,7 +6,6 @@ const create_a_post = async (req, res, next) => {
 
     try {
         const user = await userModel.findById(userInfo);
-        console.log(user, "In here");
         if (!user) {
             return res
                 .status(401)
@@ -15,10 +14,13 @@ const create_a_post = async (req, res, next) => {
 
         const newPost = new postModel({ ...req.body, userId: userInfo._id });
         const createdPost = await newPost.save();
-        
+
         user.postIds.push(createdPost._id);
         await user.save();
-        res.status(200).json({ createdPost });
+        res.status(200).json({
+            message: "Post successfully created",
+            createdPost,
+        });
     } catch (error) {
         next(error);
     }
